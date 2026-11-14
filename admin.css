@@ -1,0 +1,1007 @@
+/* ==========================================================================
+   KinoUz — admin.css
+   Faqat admin.html (admin panel) uchun. style.css bilan aralashmaydi.
+   JS bilan boshqariladigan holatlar (display, .hidden, .editing) saqlangan.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Dizayn tokenlari
+   -------------------------------------------------------------------------- */
+:root {
+  --bg: #0b0b0f;
+  --bg-soft: #101016;
+  --card-bg: #17171f;
+  --card-bg-2: #1e1e28;
+  --surface: rgba(255, 255, 255, 0.04);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  --accent: #e50914;
+  --accent-hover: #ff1f2d;
+  --accent-deep: #8a0009;
+  --accent-soft: rgba(229, 9, 20, 0.16);
+  --accent-glow: 0 10px 30px rgba(229, 9, 20, 0.38);
+
+  --blue: #3b82f6;
+  --blue-soft: #8cbcff;
+  --warning: #f59e0b;
+  --warning-soft: #fcd34d;
+  --success: #22c55e;
+
+  --text: #ffffff;
+  --text-soft: #d4d4dc;
+  --text-muted: #8c8c99;
+
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 22px;
+
+  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.35);
+  --shadow: 0 16px 44px rgba(0, 0, 0, 0.55);
+
+  --font: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --t: 0.3s var(--ease);
+
+  --header-h: 72px;
+}
+
+/* --------------------------------------------------------------------------
+   2. Asos
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(229, 9, 20, 0.08), transparent 45%),
+    radial-gradient(ellipse at 100% 100%, rgba(59, 130, 246, 0.05), transparent 40%);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+h1, h2, h3, h4, p {
+  margin: 0;
+}
+
+h1, h2, h3, h4 {
+  line-height: 1.22;
+  letter-spacing: -0.01em;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a2a35;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   3. Header (.navbar)
+   -------------------------------------------------------------------------- */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 clamp(16px, 3vw, 40px);
+  background: rgba(16, 16, 22, 0.86);
+  backdrop-filter: blur(16px) saturate(170%);
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.navbar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.55;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-shadow: 0 0 18px rgba(229, 9, 20, 0.4);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.logo::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent);
+}
+
+.logo::after {
+  content: "ADMIN";
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(229, 9, 20, 0.3);
+  background: var(--accent-soft);
+  color: var(--text-soft);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  font-size: 0.86rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background var(--t), border-color var(--t), transform var(--t), box-shadow var(--t);
+}
+
+.admin-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: var(--accent-glow);
+}
+
+.admin-btn:active {
+  transform: scale(0.97);
+}
+
+/* --------------------------------------------------------------------------
+   4. Sahifa va login oynasi
+   -------------------------------------------------------------------------- */
+.admin-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-box {
+  position: relative;
+  width: min(440px, calc(100% - 32px));
+  margin: auto;
+  padding: clamp(28px, 5vw, 42px);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(160deg, rgba(32, 32, 42, 0.92), rgba(16, 16, 22, 0.97));
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  text-align: center;
+  overflow: hidden;
+  animation: cardIn 0.6s var(--ease) both;
+}
+
+.login-box::before {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 18px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+  box-shadow: var(--accent-glow);
+}
+
+.login-box::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 15%;
+  right: 15%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+.login-box h2,
+.login-box h3 {
+  font-size: 1.55rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.login-box p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+
+#password {
+  width: 100%;
+  height: 52px;
+  margin: 14px 0 12px;
+  padding: 0 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  outline: none;
+  transition: border-color var(--t), box-shadow var(--t), background var(--t);
+}
+
+#password::placeholder {
+  color: var(--text-muted);
+  letter-spacing: normal;
+}
+
+#password:hover {
+  border-color: var(--border-strong);
+}
+
+#password:focus {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.login-box button {
+  width: 100%;
+  height: 52px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent), #b0060f);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  box-shadow: 0 8px 24px rgba(229, 9, 20, 0.3);
+  transition: transform 0.3s var(--ease), box-shadow var(--t), background var(--t);
+}
+
+.login-box button:hover {
+  background: linear-gradient(135deg, var(--accent-hover), var(--accent));
+  transform: translateY(-2px);
+  box-shadow: var(--accent-glow);
+}
+
+.login-box button:active {
+  transform: scale(0.98);
+}
+
+#error {
+  min-height: 20px;
+  margin-top: 4px;
+  color: #ff6b6b;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+#error:not(:empty) {
+  animation: shake 0.45s var(--ease);
+}
+
+/* --------------------------------------------------------------------------
+   5. Dashboard layout (.admin-page ichida)
+   -------------------------------------------------------------------------- */
+.admin-page > .navbar + *:not(.login-box) {
+  width: 100%;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: clamp(20px, 3vw, 36px) clamp(16px, 3vw, 40px) 56px;
+}
+
+.form {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: clamp(20px, 3vw, 28px);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(160deg, var(--card-bg-2), var(--card-bg));
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  animation: cardIn 0.5s var(--ease) both;
+}
+
+.form::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 24px;
+  right: 24px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.7;
+}
+
+/* Tahrirlash rejimi: forma qizil chegara bilan ajraladi */
+.form.editing,
+.form[data-mode="edit"] {
+  border-color: rgba(59, 130, 246, 0.45);
+  box-shadow: var(--shadow-sm), 0 0 0 1px rgba(59, 130, 246, 0.15), 0 0 30px rgba(59, 130, 246, 0.12);
+}
+
+.form.editing::before,
+.form[data-mode="edit"]::before {
+  background: linear-gradient(90deg, transparent, var(--blue), transparent);
+}
+
+#formTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 6px;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+#formTitle::before {
+  content: "";
+  width: 4px;
+  height: 22px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-deep));
+  box-shadow: 0 0 12px rgba(229, 9, 20, 0.5);
+}
+
+.form.editing #formTitle::before,
+.form[data-mode="edit"] #formTitle::before {
+  background: linear-gradient(180deg, var(--blue), #1d4ed8);
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.5);
+}
+
+/* Inputlar */
+#title,
+#year,
+#genre,
+#rating,
+#img,
+#video {
+  width: 100%;
+  height: 48px;
+  padding: 0 15px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-soft);
+  color: var(--text);
+  font-size: 0.94rem;
+  outline: none;
+  transition: border-color var(--t), box-shadow var(--t), background var(--t);
+}
+
+#title::placeholder,
+#year::placeholder,
+#genre::placeholder,
+#rating::placeholder,
+#img::placeholder,
+#video::placeholder {
+  color: var(--text-muted);
+}
+
+#title:hover,
+#year:hover,
+#genre:hover,
+#rating:hover,
+#img:hover,
+#video:hover {
+  border-color: var(--border-strong);
+}
+
+#title:focus,
+#year:focus,
+#genre:focus,
+#rating:focus,
+#img:focus,
+#video:focus {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+#year,
+#rating {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+#year::-webkit-outer-spin-button,
+#year::-webkit-inner-spin-button,
+#rating::-webkit-outer-spin-button,
+#rating::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Fayl inputlari (#img, #video agar type=file bo'lsa) */
+#img[type="file"],
+#video[type="file"] {
+  height: auto;
+  padding: 9px 12px;
+  font-size: 0.84rem;
+  color: var(--text-soft);
+}
+
+#img[type="file"]::file-selector-button,
+#video[type="file"]::file-selector-button {
+  margin-right: 12px;
+  padding: 7px 13px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent-soft);
+  color: var(--text);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--t);
+}
+
+#img[type="file"]::file-selector-button:hover,
+#video[type="file"]::file-selector-button:hover {
+  background: var(--accent);
+}
+
+/* Poster/preview ko'rinishi (#preview — rasm yoki blok) */
+#preview {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px dashed var(--border-strong);
+  background: var(--bg-soft) center / cover no-repeat;
+  overflow: hidden;
+  transition: border-color var(--t), box-shadow var(--t);
+}
+
+#preview:hover {
+  border-color: rgba(229, 9, 20, 0.45);
+}
+
+/* Hali rasm tanlanmagan bo'lsa — placeholder ko'rinish */
+#preview:not([src]):empty {
+  background:
+    linear-gradient(135deg, rgba(229, 9, 20, 0.08), rgba(59, 130, 246, 0.05)),
+    var(--bg-soft);
+}
+
+#preview:not([src]):empty::after {
+  content: "Poster ko'rinishi";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-muted);
+  font-size: 0.84rem;
+}
+
+/* Form tugmalari */
+#saveBtn,
+#cancelBtn,
+.reset-btn {
+  height: 48px;
+  padding: 0 18px;
+  border-radius: 12px;
+  font-size: 0.93rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  transition: background var(--t), transform 0.3s var(--ease), box-shadow var(--t), color var(--t), border-color var(--t);
+}
+
+#saveBtn {
+  width: 100%;
+  margin-top: 4px;
+  border: none;
+  background: linear-gradient(135deg, var(--accent), #b0060f);
+  color: #fff;
+  box-shadow: 0 8px 22px rgba(229, 9, 20, 0.28);
+}
+
+#saveBtn:hover {
+  background: linear-gradient(135deg, var(--accent-hover), var(--accent));
+  transform: translateY(-2px);
+  box-shadow: var(--accent-glow);
+}
+
+/* Tahrirlash rejimida saqlash tugmasi ko'k bo'ladi */
+.form.editing #saveBtn,
+.form[data-mode="edit"] #saveBtn {
+  background: linear-gradient(135deg, var(--blue), #1d4ed8);
+  box-shadow: 0 8px 22px rgba(59, 130, 246, 0.3);
+}
+
+.form.editing #saveBtn:hover,
+.form[data-mode="edit"] #saveBtn:hover {
+  background: linear-gradient(135deg, #5b9bff, var(--blue));
+  box-shadow: 0 12px 30px rgba(59, 130, 246, 0.4);
+}
+
+#cancelBtn {
+  width: 100%;
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  color: var(--text-soft);
+}
+
+#cancelBtn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--text-muted);
+  color: var(--text);
+}
+
+.reset-btn {
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--warning-soft);
+}
+
+.reset-btn:hover {
+  background: var(--warning);
+  border-color: var(--warning);
+  color: #111;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(245, 158, 11, 0.3);
+}
+
+#saveBtn:active,
+#cancelBtn:active,
+.reset-btn:active {
+  transform: scale(0.97);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* --------------------------------------------------------------------------
+   6. Kinolar ro'yxati (#list, .movie-row)
+   -------------------------------------------------------------------------- */
+#list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.movie-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 14px 12px 12px;
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: transform var(--t), border-color var(--t), box-shadow var(--t), background var(--t);
+  animation: cardIn 0.45s var(--ease) both;
+}
+
+.movie-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-deep));
+  opacity: 0;
+  transition: opacity var(--t);
+}
+
+.movie-row:hover {
+  transform: translateX(4px);
+  border-color: rgba(229, 9, 20, 0.35);
+  background: var(--card-bg-2);
+  box-shadow: var(--shadow);
+}
+
+.movie-row:hover::before {
+  opacity: 1;
+}
+
+.movie-row img {
+  width: 74px;
+  height: 104px;
+  object-fit: cover;
+  border-radius: 10px;
+  background: var(--bg-soft);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  transition: transform 0.5s var(--ease);
+}
+
+.movie-row:hover img {
+  transform: scale(1.05);
+}
+
+/* Matn qismi: sarlavha va meta chiplar */
+.movie-row span {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.movie-row span:first-of-type {
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.movie-row > div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Tugmalar (edit-btn va o'chirish) */
+.movie-row > div:last-child,
+.movie-row .actions {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.movie-row button,
+.edit-btn,
+.delete-btn {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background var(--t), color var(--t), border-color var(--t), transform 0.25s var(--ease), box-shadow var(--t);
+}
+
+.edit-btn {
+  border: 1px solid rgba(59, 130, 246, 0.32);
+  background: rgba(59, 130, 246, 0.12);
+  color: var(--blue-soft);
+}
+
+.edit-btn:hover {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(59, 130, 246, 0.3);
+}
+
+.movie-row button:not(.edit-btn) {
+  border: 1px solid rgba(229, 9, 20, 0.35);
+  background: var(--accent-soft);
+  color: #ff7a82;
+}
+
+.movie-row button:not(.edit-btn):hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: var(--accent-glow);
+}
+
+.movie-row button:active {
+  transform: scale(0.96);
+}
+
+/* Bo'sh ro'yxat — Empty State */
+#list:empty {
+  position: relative;
+  min-height: 260px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(229, 9, 20, 0.08), transparent 60%),
+    var(--surface);
+}
+
+#list:empty::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 64px;
+  height: 64px;
+  margin: -54px 0 0 -32px;
+  border-radius: 18px;
+  background: var(--accent-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24' fill='none' stroke='%23e50914' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='3' width='20' height='18' rx='2'/%3E%3Cpath d='M7 3v18M17 3v18M2 9h5M2 15h5M17 9h5M17 15h5'/%3E%3C/svg%3E") center / 28px no-repeat;
+  border: 1px solid rgba(229, 9, 20, 0.25);
+}
+
+#list:empty::after {
+  content: "Hozircha kinolar yo'q";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(50% + 24px);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   7. Dashboard grid (forma + ro'yxat yonma-yon)
+   -------------------------------------------------------------------------- */
+@media (min-width: 1025px) {
+  .admin-page > .navbar + * {
+    display: grid;
+    grid-template-columns: minmax(320px, 390px) minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+  }
+
+  .admin-page > .navbar + * > .form {
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+  }
+
+  .admin-page > .navbar + * > #list {
+    grid-column: 2;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   8. Animatsiyalar
+   -------------------------------------------------------------------------- */
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-8px); }
+  40%      { transform: translateX(8px); }
+  60%      { transform: translateX(-5px); }
+  80%      { transform: translateX(4px); }
+}
+
+/* --------------------------------------------------------------------------
+   9. Responsive — planshet (≤ 1024px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .admin-page > .navbar + * {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .form {
+    width: 100%;
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  #list {
+    width: 100%;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   10. Responsive — telefon (≤ 768px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  :root {
+    --header-h: 60px;
+  }
+
+  .navbar {
+    padding: 0 14px;
+  }
+
+  .logo {
+    font-size: 1.15rem;
+  }
+
+  .logo::after {
+    display: none;
+  }
+
+  .admin-btn {
+    padding: 7px 13px;
+    font-size: 0.8rem;
+  }
+
+  .admin-page > .navbar + * {
+    padding: 16px 12px 40px;
+    gap: 18px;
+  }
+
+  .login-box {
+    width: calc(100% - 28px);
+  }
+
+  .form {
+    padding: 18px 16px;
+    gap: 12px;
+  }
+
+  #formTitle {
+    font-size: 1.05rem;
+  }
+
+  /* Forma tugmalari — bir ustunli */
+  #saveBtn,
+  #cancelBtn,
+  .reset-btn {
+    width: 100%;
+    flex: none;
+  }
+
+  .form > .actions,
+  .form > .form-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Ro'yxat ekrandan chiqmasligi uchun */
+  .movie-row {
+    grid-template-columns: 56px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    gap: 10px 12px;
+    padding: 10px;
+  }
+
+  .movie-row img {
+    width: 56px;
+    height: 80px;
+    grid-row: 1 / span 2;
+  }
+
+  .movie-row > div:last-child,
+  .movie-row .actions {
+    grid-column: 2;
+    width: 100%;
+  }
+
+  .movie-row > div:last-child button,
+  .movie-row .actions button,
+  .edit-btn,
+  .delete-btn {
+    flex: 1;
+    min-width: 0;
+    height: 34px;
+    font-size: 0.78rem;
+  }
+
+  #list:empty {
+    min-height: 220px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   11. Responsive — kichik telefon (≤ 380px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 380px) {
+  .logo {
+    font-size: 1rem;
+  }
+
+  .admin-btn {
+    padding: 6px 10px;
+    font-size: 0.74rem;
+  }
+
+  .movie-row {
+    grid-template-columns: 1fr;
+  }
+
+  .movie-row img {
+    grid-row: auto;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+
+  .movie-row > div:last-child,
+  .movie-row .actions {
+    grid-column: 1;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   12. Harakat kamaytirish (accessibility)
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
